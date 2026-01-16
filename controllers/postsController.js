@@ -4,35 +4,44 @@ import connection from "../data/db.js";
 
 // Index
 function index(req, res) {
-   const query= "SELECT* FROM posts";
-   connection.query(query, (err, result)=>{
-    if(err){
-        res.status(500);
-        return res.json({
-            message: "Internal server error",
-        });
-    };
+    const query = "SELECT* FROM posts";
+    connection.query(query, (err, result) => {
+        if (err) {
+            res.status(500);
+            return res.json({
+                message: "Internal server error",
+            });
+        };
 
-    res.json({
-        results: result,
+        res.json({
+            results: result,
+        });
     });
-   });
 }
 
 
 //  Show
 function show(req, res) {
-    const id = parseInt(req.params.id);
-    const post = postsArray.find(post => post.id === id);
-    if (post !== undefined) {
-        res.json(post);
-    } else {
-        res.status(404);
-        res.json({
-            error: "Error 404",
-            message: "Not found post"
-        });
-    }
+    const id = req.params.id;
+    const query = "SELECT* FROM posts WHERE posts.id= ?";
+    connection.query(query, [id], (err, result) => {
+        if (err) {
+            res.status(500);
+            return res.json({
+                message: "INTERNAL ERROR SERVER",
+            });
+        };
+
+        if (result.length === 0) {
+            res.status(404);
+            res.json({
+                message: "Post non trovato"
+            });
+        } else {
+            const post = result[0];
+            res.json(post);
+        };
+    });
 
 }
 
@@ -91,7 +100,7 @@ function update(req, res) {
         post.immagine = dati.immagine,
         post.tags = dati.tags
 
-        res.json(post);
+    res.json(post);
 }
 
 
