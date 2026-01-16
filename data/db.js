@@ -1,8 +1,8 @@
-import mysql2 from mysql2;
+import mysql2 from "mysql2";
 
 const connection = mysql2.createConnection({
 host: "localhost",
-uses: "root",
+user: "root",
 password: "root",
 database:"posts_db",
 

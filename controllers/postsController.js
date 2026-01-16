@@ -1,13 +1,22 @@
 import postsArray from "../postsArray.js"
+import connection from "../data/db.js";
 
 
 // Index
 function index(req, res) {
-    const risposta = {
-        count: postsArray.length,
-        results: postsArray
-    }
-    res.json(risposta)
+   const query= "SELECT* FROM posts";
+   connection.query(query, (err, result)=>{
+    if(err){
+        res.status(500);
+        return res.json({
+            message: "Internal server error",
+        });
+    };
+
+    res.json({
+        results: result,
+    });
+   });
 }
 
 
