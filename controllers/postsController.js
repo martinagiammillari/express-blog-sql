@@ -117,20 +117,19 @@ function modify(req, res) {
 
 //  Destroy
 function destroy(req, res) {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
+    const query = "DELETE FROM posts WHERE id = ?";
+    connection.query(query, [id], (err,result) => {
+        if (err) {
+            res.status(500);
+            return res.json({
+                message: "INTERNAL ERROR SERVER",
+            });
+        };
+        res.sendStatus(204);
 
-    const index = postsArray.findIndex(post => post.id === id);
+    });
 
-    if (index === -1) {
-        return res.status(404).json({
-            error: "Error 404",
-            message: "Not found post"
-        });
-    }
-    postsArray.splice(index, 1);
-    console.log(postsArray);
-
-    res.status(204);
 }
 
 
